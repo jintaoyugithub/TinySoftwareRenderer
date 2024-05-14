@@ -10,6 +10,8 @@ const TGAColor white = TGAColor(255, 255, 255, 255);
 const TGAColor red = TGAColor(255, 0, 0, 255);
 const TGAColor green = TGAColor(0, 255, 0, 255);
 const TGAColor blue = TGAColor(0, 0, 255, 255);
+// -- draw mode
+enum drawMode { wireframe, filledTri };
 // -- size of the image
 const int width = 800;
 const int height = 800;
@@ -31,15 +33,26 @@ bool isInBarycentric(const Vec2i &, const std::vector<Vec2i> &);
 void drawBoundingBox(const Vec2i &, const Vec2i &, TGAImage &,
                      const TGAColor &);
 void TriangleBarycentric(std::vector<Vec2i> &, TGAImage &, const TGAColor &);
+// -- draw obj models
+void drawModel(Model *, TGAImage &, int);
 
 int main(int argc, char **argv) {
   TGAImage image(100, 100, TGAImage::RGB);
+  // load models
+  model = new Model("../models/obj/humanHead.obj");
+
+  /* draw filled human head */
+  TGAImage humanHeadFilledImage(width, height, TGAImage::RGB);
+  drawModel(model, humanHeadFilledImage, drawMode::filledTri);
+  humanHeadFilledImage.flip_vertically();
+  humanHeadFilledImage.write_tga_file("output/filledHumanHead.tga");
 
   /* draw triangle */
   TGAImage triangleImage(200, 200, TGAImage::RGB);
   std::vector<Vec2i> tri1 = {Vec2i(10, 70), Vec2i(50, 160), Vec2i(70, 80)};
   std::vector<Vec2i> tri2 = {Vec2i(180, 50), Vec2i(150, 1), Vec2i(70, 180)};
   std::vector<Vec2i> tri3 = {Vec2i(180, 150), Vec2i(120, 160), Vec2i(130, 180)};
+
   TriangleLineSweep(tri1, triangleImage, white);
   TriangleBarycentric(tri2, triangleImage, green);
   TriangleLineSweep(tri3, triangleImage, blue);
@@ -48,26 +61,7 @@ int main(int argc, char **argv) {
 
   /* draw models */
   TGAImage humanHeadImage(width, height, TGAImage::RGB);
-  // load models
-  model = new Model("../models/obj/humanHead.obj");
-  // extra faces and vertices from models
-  for (int i = 0; i < model->nfaces(); i++) {
-    // get face
-    std::vector<int> singleFace = model->face(i);
-    // get vertices to draw the line
-    for (int j = 0; j < 3; j++) {
-      // loop to find the v0, v1 and v2
-      Vec3f v0 = model->vert(singleFace[j]);
-      Vec3f v1 = model->vert(singleFace[(j + 1) % 3]);
-      // remap the data in v0 and v1 from -1~1 to 0~1
-      int x0 = remap(v0.x, Vec2i(-1, 1), Vec2i(0, width));
-      int x1 = remap(v1.x, Vec2i(-1, 1), Vec2i(0, width));
-      int y0 = remap(v0.y, Vec2i(-1, 1), Vec2i(0, height));
-      int y1 = remap(v1.y, Vec2i(-1, 1), Vec2i(0, height));
-      // Line(Vec2f(v0.x, v0.y), Vec2f(v1.x, v1.y), humanHeadImage, white);
-      Line(Vec2i(x0, y0), Vec2i(x1, y1), humanHeadImage, white);
-    }
-  }
+  drawModel(model, humanHeadImage, drawMode::wireframe);
 
   humanHeadImage.flip_vertically(); // i want to have the origin at the left
                                     // bottom corner of the image
@@ -268,5 +262,50 @@ void TriangleBarycentric(std::vector<Vec2i> &vert, TGAImage &img,
         img.set(j, i, col);
       }
     }
+  }
+}
+
+void drawModel(Model *model, TGAImage &img, int drawMode) {
+  switch (drawMode) {
+  case drawMode::wireframe:
+    // extra faces and vertices from models
+    for (int i = 0; i < model->nfaces(); i++) {
+      // get face
+      std::vector<int> singleFace = model->face(i);
+      // get vertices to draw the line
+      for (int j = 0; j < 3; j++) {
+        // loop to find the v0, v1 and v2
+        Vec3f v0 = model->vert(singleFace[j]);
+        Vec3f v1 = model->vert(singleFace[(j + 1) % 3]);
+        // remap the data in v0 and v1 from -1~1 to 0~1
+        int x0 = remap(v0.x, Vec2i(-1, 1), Vec2i(0, width));
+        int x1 = remap(v1.x, Vec2i(-1, 1), Vec2i(0, width));
+        int y0 = remap(v0.y, Vec2i(-1, 1), Vec2i(0, height));
+        int y1 = remap(v1.y, Vec2i(-1, 1), Vec2i(0, height));
+        Line(Vec2i(x0, y0), Vec2i(x1, y1), img, white);
+      }
+    }
+    break;
+  case drawMode::filledTri:
+    for (int i = 0; i < model->nfaces(); i++) {
+      // get face
+      std::vector<int> singleFace = model->face(i);
+      // get vertices to draw the line
+      std::vector<Vec2i> triVertices;
+      for (int j = 0; j < 3; j++) {
+        // loop to find the v0, v1 and v2
+        Vec3f v = model->vert(singleFace[j]);
+        // remap the data in v0 and v1 from -1~1 to 0~width or 0~height
+        int x = remap(v.x, Vec2i(-1, 1), Vec2i(0, width));
+        int y = remap(v.y, Vec2i(-1, 1), Vec2i(0, height));
+        triVertices.push_back(Vec2i(x, y));
+      }
+      // draw the triangle
+      TriangleBarycentric(triVertices, img, white);
+    }
+    break;
+  default:
+    std::cout << "please enter the proper drawMode" << std::endl;
+    break;
   }
 }
