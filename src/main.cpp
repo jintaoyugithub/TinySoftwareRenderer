@@ -8,6 +8,8 @@
 /* constants declaration */
 const TGAColor white = TGAColor(255, 255, 255, 255);
 const TGAColor red = TGAColor(255, 0, 0, 255);
+const TGAColor green = TGAColor(0, 255, 0, 255);
+const TGAColor blue = TGAColor(0, 0, 255, 255);
 // -- size of the image
 const int width = 800;
 const int height = 800;
@@ -20,17 +22,29 @@ Model *model = nullptr;
 void Line(Vec2i, Vec2i, TGAImage &, const TGAColor &);
 // -- remap func
 int remap(float, Vec2i, Vec2i);
-// -- draw triangles func
-void Triangle(std::vector<Vec2i> &, TGAImage &, const TGAColor &);
+// -- draw triangles func, line sweep
+void TriangleLineSweep(std::vector<Vec2i> &, TGAImage &, const TGAColor &);
+// -- draw triangles func, barycentric coordinates
+bool isAllGreater0(const int *, int);
+bool isAllLess0(const int *, int);
+bool isInBarycentric(const Vec2i &, const std::vector<Vec2i> &);
+void drawBoundingBox(const Vec2i &, const Vec2i &, TGAImage &,
+                     const TGAColor &);
+void TriangleBarycentric(std::vector<Vec2i> &, TGAImage &, const TGAColor &);
 
 int main(int argc, char **argv) {
   TGAImage image(100, 100, TGAImage::RGB);
 
   /* draw triangle */
-  std::vector<Vec2i> tri1 = {Vec2i(10, 20), Vec2i(50, 40), Vec2i(70, 80)};
-  Triangle(tri1, image, white);
-  image.flip_vertically();
-  image.write_tga_file("output/triangle.tga");
+  TGAImage triangleImage(200, 200, TGAImage::RGB);
+  std::vector<Vec2i> tri1 = {Vec2i(10, 70), Vec2i(50, 160), Vec2i(70, 80)};
+  std::vector<Vec2i> tri2 = {Vec2i(180, 50), Vec2i(150, 1), Vec2i(70, 180)};
+  std::vector<Vec2i> tri3 = {Vec2i(180, 150), Vec2i(120, 160), Vec2i(130, 180)};
+  TriangleLineSweep(tri1, triangleImage, white);
+  TriangleBarycentric(tri2, triangleImage, green);
+  TriangleLineSweep(tri3, triangleImage, blue);
+  triangleImage.flip_vertically();
+  triangleImage.write_tga_file("output/barycentricTri.tga");
 
   /* draw models */
   TGAImage humanHeadImage(width, height, TGAImage::RGB);
@@ -131,8 +145,8 @@ int remap(float var, Vec2i oldRange, Vec2i newRange) {
          (oldRange.y - oldRange.x);
 }
 
-void Triangle(std::vector<Vec2i> &vertices, TGAImage &img,
-              const TGAColor &col) {
+void TriangleLineSweep(std::vector<Vec2i> &vertices, TGAImage &img,
+                       const TGAColor &col) {
   // ensure the size of vertices is 3
   if (vertices.size() != 3) {
     std::cout << "wrong vertices number in a single triangle" << std::endl;
@@ -154,8 +168,8 @@ void Triangle(std::vector<Vec2i> &vertices, TGAImage &img,
         i > (vertices[1].y - vertices[0].y) || (vertices[0].y == vertices[1].y);
     // problem here
     float t1 = (float)i / totalHeight;
-    // caution: when is in the second half, i should be recalculate to make sure
-    // t2 is in 0-1
+    // caution: when is in the second half, i should be recalculate to make
+    // sure t2 is in 0-1
     float t2 = isSecond ? (float)(i - (vertices[1].y - vertices[0].y)) /
                               (vertices[2].y - vertices[1].y)
                         : (float)i / (vertices[1].y - vertices[0].y);
@@ -180,5 +194,79 @@ void Triangle(std::vector<Vec2i> &vertices, TGAImage &img,
     Line(vertices[0], vertices[1], img, red);
     Line(vertices[0], vertices[2], img, red);
     Line(vertices[1], vertices[2], img, red);
+  }
+}
+
+bool isAllGreater0(const int *arr, int size) {
+  for (int i = 0; i < size; i++) {
+    if (arr[i] < 0)
+      return false;
+  }
+
+  return true;
+}
+
+bool isAllLess0(const int *arr, int size) {
+  for (int i = 0; i < size; i++) {
+    if (arr[i] > 0)
+      return false;
+  }
+
+  return true;
+}
+
+bool isInBarycentric(const Vec2i &p, const std::vector<Vec2i> &vert) {
+  if (vert.size() != 3) {
+    std::cout << "wrong triangle sieze" << std::endl;
+    return false;
+  }
+  int zValues[3] = {0};
+  // vertices A,B and C are sorted from the lowest y value to the highest
+  for (int i = 0; i < vert.size(); i++) {
+    Vec2i endpoint2p = p - vert[i];
+    Vec2i edge = vert[(i + 1) % 3] - vert[i];
+    Vec3i endpoint2p3d = Vec3i(endpoint2p.x, endpoint2p.y, 1);
+    Vec3i edge3d = Vec3i(edge.x, edge.y, 1);
+    // do cross product
+    Vec3i result = endpoint2p3d ^ edge3d;
+    // store the z value of all corss product
+    zValues[i] = result.z;
+  }
+
+  if (isAllGreater0(zValues, 3) || isAllLess0(zValues, 3))
+    return true;
+
+  return false;
+}
+
+void drawBoundingBox(const Vec2i &lt, const Vec2i &rb, TGAImage &img,
+                     const TGAColor &col) {
+  Vec2i lb = Vec2i(lt.x, rb.y);
+  Vec2i rt = Vec2i(rb.x, lt.y);
+  Line(lt, lb, img, col);
+  Line(lb, rb, img, col);
+  Line(rb, rt, img, col);
+  Line(rt, lt, img, col);
+}
+
+void TriangleBarycentric(std::vector<Vec2i> &vert, TGAImage &img,
+                         const TGAColor &col) {
+  // find the bounding box
+  Vec2i leftTop = Vec2i(std::min(std::min(vert[0].x, vert[1].x), vert[2].x),
+                        std::max(std::max(vert[0].y, vert[1].y), vert[2].y));
+  Vec2i rightBot = Vec2i(std::max(std::max(vert[0].x, vert[1].x), vert[2].x),
+                         std::min(std::min(vert[0].y, vert[1].y), vert[2].y));
+
+  // draw the bounding box
+  drawBoundingBox(leftTop, rightBot, img, green);
+
+  // loop the bounding box of a tri to determine if the pixel is inside the
+  // tri filled the tri rows by rows
+  for (int i = leftTop.y; i > rightBot.y; i--) {
+    for (int j = leftTop.x; j < rightBot.x; j++) {
+      if (isInBarycentric(Vec2i(j, i), vert)) {
+        img.set(j, i, col);
+      }
+    }
   }
 }
