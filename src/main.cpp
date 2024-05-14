@@ -153,12 +153,17 @@ void Triangle(std::vector<Vec2i> &vertices, TGAImage &img,
     bool isSecond =
         i > (vertices[1].y - vertices[0].y) || (vertices[0].y == vertices[1].y);
     // problem here
-    float t = isSecond ? 1 : (float)i / totalHeight;
+    float t1 = (float)i / totalHeight;
+    // caution: when is in the second half, i should be recalculate to make sure
+    // t2 is in 0-1
+    float t2 = isSecond ? (float)(i - (vertices[1].y - vertices[0].y)) /
+                              (vertices[2].y - vertices[1].y)
+                        : (float)i / (vertices[1].y - vertices[0].y);
     // determine the start point of the boundary
-    Vec2i boundaryPointLeft = vertices[0] * (1 - t) + vertices[2] * t;
-    Vec2i boundaryPointRight = isSecond
-                                   ? vertices[0] * (1 - t) + vertices[1] * t
-                                   : vertices[1] * (1 - t) + vertices[2] * t;
+    Vec2i boundaryPointLeft = vertices[0] * (1 - t1) + vertices[2] * t1;
+    Vec2i boundaryPointRight =
+        isSecond ? (vertices[1] * (1 - t2) + vertices[2] * t2)
+                 : (vertices[0] * (1 - t2) + vertices[1] * t2);
 
     // make sure it's render from left to right
     if (boundaryPointLeft.x > boundaryPointRight.x)
@@ -170,5 +175,10 @@ void Triangle(std::vector<Vec2i> &vertices, TGAImage &img,
     // draw each segment line
     // artifacts
     // Line(boundaryPointLeft, boundaryPointRight, img, white);
+
+    // draw the wire of the triangle
+    Line(vertices[0], vertices[1], img, red);
+    Line(vertices[0], vertices[2], img, red);
+    Line(vertices[1], vertices[2], img, red);
   }
 }
