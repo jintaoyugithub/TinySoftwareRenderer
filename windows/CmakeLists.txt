@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.20)
+
+project (WinApp)
+
+aux_source_directory(./src DIR_SRCS)
+
+# 指定生成目标
+add_executable(WinApp ${DIR_SRCS})

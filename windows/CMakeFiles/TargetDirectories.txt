@@ -1,0 +1,3 @@
+F:/cpp/personalProject/TinySoftwareRenderer/windows/CMakeFiles/WinApp.dir
+F:/cpp/personalProject/TinySoftwareRenderer/windows/CMakeFiles/edit_cache.dir
+F:/cpp/personalProject/TinySoftwareRenderer/windows/CMakeFiles/rebuild_cache.dir
