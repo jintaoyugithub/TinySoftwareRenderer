@@ -11,35 +11,58 @@ const TGAColor red = TGAColor(255, 0, 0, 255);
 const TGAColor green = TGAColor(0, 255, 0, 255);
 const TGAColor blue = TGAColor(0, 0, 255, 255);
 // -- draw mode
-enum drawMode { wireframe, filledTri };
+enum drawMode { wireframe, filledTri, filledTriLitted };
 // -- size of the image
 const int width = 800;
 const int height = 800;
+// -- light dir
+const Vec3f lightDir(0, 0, -1);
 
-/* variables declaration */
+/* global variables declaration */
 Model *model = nullptr;
+float *zBuffer;
 
 /* functions declaration */
 // -- draw line func
 void Line(Vec2i, Vec2i, TGAImage &, const TGAColor &);
-// -- remap func
-int remap(float, Vec2i, Vec2i);
 // -- draw triangles func, line sweep
 void TriangleLineSweep(std::vector<Vec2i> &, TGAImage &, const TGAColor &);
-// -- draw triangles func, barycentric coordinates
+// draw triangle with the barycentric method
+void TriangleBarycentric(std::vector<Vec2i> &, TGAImage &, const TGAColor &);
+void TriangleBarycentricWithZBuffer(Vec3f *, float *, TGAImage &,
+                                    const TGAColor &);
+// -- draw obj models
+void drawModel(Model *, TGAImage &, int);
+
+// - utilities function
+// can be written to template funciton
+void sortY(std::vector<Vec2i> &);
+void sortY(std::vector<Vec3f> &);
+
 bool isAllGreater0(const int *, int);
 bool isAllLess0(const int *, int);
 bool isInBarycentric(const Vec2i &, const std::vector<Vec2i> &);
+// for 3d triangle
+bool isInBarycentric(const Vec2i &, const Vec3f *);
+// -- draw triangles func, barycentric coordinates
 void drawBoundingBox(const Vec2i &, const Vec2i &, TGAImage &,
                      const TGAColor &);
-void TriangleBarycentric(std::vector<Vec2i> &, TGAImage &, const TGAColor &);
-// -- draw obj models
-void drawModel(Model *, TGAImage &, int);
+// -- remap func
+int remap(float, Vec2i, Vec2i);
+// -- calculate barycentric coordinates of a point
+Vec3f barycentricCoord(const Vec3f &, const std::vector<Vec3f> &);
 
 int main(int argc, char **argv) {
   TGAImage image(100, 100, TGAImage::RGB);
   // load models
   model = new Model("../models/obj/humanHead.obj");
+
+  /* draw filled human head with light */
+  TGAImage humanHeadFilledWithLightImage(width, height, TGAImage::RGB);
+  drawModel(model, humanHeadFilledWithLightImage, drawMode::filledTri);
+  humanHeadFilledWithLightImage.flip_vertically();
+  humanHeadFilledWithLightImage.write_tga_file(
+      "output/filledHumanHeadWithLight.tga");
 
   /* draw filled human head */
   TGAImage humanHeadFilledImage(width, height, TGAImage::RGB);
@@ -307,5 +330,28 @@ void drawModel(Model *model, TGAImage &img, int drawMode) {
   default:
     std::cout << "please enter the proper drawMode" << std::endl;
     break;
+  }
+}
+
+void TriangleBarycentricWithZBuffer(Vec3f *vert, float *zBuffer, TGAImage &img,
+                                    const TGAColor &col) {
+
+  // find the bounding box
+  Vec2i leftTop = Vec2i(std::min(std::min(vert[0].x, vert[1].x), vert[2].x),
+                        std::max(std::max(vert[0].y, vert[1].y), vert[2].y));
+  Vec2i rightBot = Vec2i(std::max(std::max(vert[0].x, vert[1].x), vert[2].x),
+                         std::min(std::min(vert[0].y, vert[1].y), vert[2].y));
+
+  // draw the bounding box
+  drawBoundingBox(leftTop, rightBot, img, green);
+
+  // loop the bounding box of a tri to determine if the pixel is inside the
+  // tri filled the tri rows by rows
+  for (int i = leftTop.y; i > rightBot.y; i--) {
+    for (int j = leftTop.x; j < rightBot.x; j++) {
+      // if not in the triangle
+      if (!isInBarycentric(Vec2i(j, i), vert))
+        continue;
+    }
   }
 }
