@@ -8,8 +8,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "F:/cpp/personalProject/TinySoftwareRenderer/windows/src/Window.cpp" "CMakeFiles/WinApp.dir/src/Window.cpp.obj" "gcc" "CMakeFiles/WinApp.dir/src/Window.cpp.obj.d"
-  "F:/cpp/personalProject/TinySoftwareRenderer/windows/src/main.cpp" "CMakeFiles/WinApp.dir/src/main.cpp.obj" "gcc" "CMakeFiles/WinApp.dir/src/main.cpp.obj.d"
+  "F:/cpp/personalProject/TinySoftwareRenderer/windows/src/Win64.cpp" "CMakeFiles/program.dir/src/Win64.cpp.obj" "gcc" "CMakeFiles/program.dir/src/Win64.cpp.obj.d"
+  "F:/cpp/personalProject/TinySoftwareRenderer/windows/src/main.cpp" "CMakeFiles/program.dir/src/main.cpp.obj" "gcc" "CMakeFiles/program.dir/src/main.cpp.obj.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

@@ -117,48 +117,48 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named WinApp
+# Target rules for targets named program
 
 # Build rule for target.
-WinApp: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 WinApp
-.PHONY : WinApp
+program: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 program
+.PHONY : program
 
 # fast build rule for target.
-WinApp/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/WinApp.dir/build.make CMakeFiles/WinApp.dir/build
-.PHONY : WinApp/fast
+program/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/program.dir/build.make CMakeFiles/program.dir/build
+.PHONY : program/fast
 
-src/Window.obj: src/Window.cpp.obj
-.PHONY : src/Window.obj
+src/Win64.obj: src/Win64.cpp.obj
+.PHONY : src/Win64.obj
 
 # target to build an object file
-src/Window.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/WinApp.dir/build.make CMakeFiles/WinApp.dir/src/Window.cpp.obj
-.PHONY : src/Window.cpp.obj
+src/Win64.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/program.dir/build.make CMakeFiles/program.dir/src/Win64.cpp.obj
+.PHONY : src/Win64.cpp.obj
 
-src/Window.i: src/Window.cpp.i
-.PHONY : src/Window.i
+src/Win64.i: src/Win64.cpp.i
+.PHONY : src/Win64.i
 
 # target to preprocess a source file
-src/Window.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/WinApp.dir/build.make CMakeFiles/WinApp.dir/src/Window.cpp.i
-.PHONY : src/Window.cpp.i
+src/Win64.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/program.dir/build.make CMakeFiles/program.dir/src/Win64.cpp.i
+.PHONY : src/Win64.cpp.i
 
-src/Window.s: src/Window.cpp.s
-.PHONY : src/Window.s
+src/Win64.s: src/Win64.cpp.s
+.PHONY : src/Win64.s
 
 # target to generate assembly for a file
-src/Window.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/WinApp.dir/build.make CMakeFiles/WinApp.dir/src/Window.cpp.s
-.PHONY : src/Window.cpp.s
+src/Win64.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/program.dir/build.make CMakeFiles/program.dir/src/Win64.cpp.s
+.PHONY : src/Win64.cpp.s
 
 src/main.obj: src/main.cpp.obj
 .PHONY : src/main.obj
 
 # target to build an object file
 src/main.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/WinApp.dir/build.make CMakeFiles/WinApp.dir/src/main.cpp.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/program.dir/build.make CMakeFiles/program.dir/src/main.cpp.obj
 .PHONY : src/main.cpp.obj
 
 src/main.i: src/main.cpp.i
@@ -166,7 +166,7 @@ src/main.i: src/main.cpp.i
 
 # target to preprocess a source file
 src/main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/WinApp.dir/build.make CMakeFiles/WinApp.dir/src/main.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/program.dir/build.make CMakeFiles/program.dir/src/main.cpp.i
 .PHONY : src/main.cpp.i
 
 src/main.s: src/main.cpp.s
@@ -174,7 +174,7 @@ src/main.s: src/main.cpp.s
 
 # target to generate assembly for a file
 src/main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/WinApp.dir/build.make CMakeFiles/WinApp.dir/src/main.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/program.dir/build.make CMakeFiles/program.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
 # Help Target
@@ -185,10 +185,10 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... WinApp"
-	@echo "... src/Window.obj"
-	@echo "... src/Window.i"
-	@echo "... src/Window.s"
+	@echo "... program"
+	@echo "... src/Win64.obj"
+	@echo "... src/Win64.i"
+	@echo "... src/Win64.s"
 	@echo "... src/main.obj"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

@@ -1,8 +1,15 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.0)
+project(program)
 
-project (WinApp)
+# 指定编译器
+set(CMAKE_CXX_COMPILER g++)
 
+# 指定包含头文件的目录
+include_directories(./headers)
+
+# 指定源文件目录
 aux_source_directory(./src DIR_SRCS)
 
-# 指定生成目标
-add_executable(WinApp ${DIR_SRCS})
+# 添加源文件
+add_executable(program ${DIR_SRCS})
+

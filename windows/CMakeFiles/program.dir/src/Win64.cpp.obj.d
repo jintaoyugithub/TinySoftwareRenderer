@@ -1,6 +1,6 @@
-CMakeFiles/WinApp.dir/src/main.cpp.obj: \
- F:/cpp/personalProject/TinySoftwareRenderer/windows/src/main.cpp \
- F:/cpp/personalProject/TinySoftwareRenderer/windows/headers/Window.h \
+CMakeFiles/program.dir/src/Win64.cpp.obj: \
+ F:/cpp/personalProject/TinySoftwareRenderer/windows/src/Win64.cpp \
+ F:/cpp/personalProject/TinySoftwareRenderer/windows/headers/Win64.h \
  F:/make/w64devkit-1.23.0/w64devkit/x86_64-w64-mingw32/include/windows.h \
  F:/make/w64devkit-1.23.0/w64devkit/x86_64-w64-mingw32/include/_mingw.h \
  F:/make/w64devkit-1.23.0/w64devkit/x86_64-w64-mingw32/include/_mingw_mac.h \
@@ -396,4 +396,6 @@ CMakeFiles/WinApp.dir/src/main.cpp.obj: \
  F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/basic_ios.tcc \
  F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/ostream.tcc \
  F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/istream \
- F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/istream.tcc
+ F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/istream.tcc \
+ F:/cpp/personalProject/TinySoftwareRenderer/windows/headers/Buffer.h \
+ F:/cpp/personalProject/TinySoftwareRenderer/windows/headers/Window.h

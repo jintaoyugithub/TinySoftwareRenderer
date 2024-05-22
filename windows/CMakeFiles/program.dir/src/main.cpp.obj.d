@@ -1,6 +1,6 @@
-CMakeFiles/WinApp.dir/src/Window.cpp.obj: \
- F:/cpp/personalProject/TinySoftwareRenderer/windows/src/Window.cpp \
- F:/cpp/personalProject/TinySoftwareRenderer/windows/headers/Window.h \
+CMakeFiles/program.dir/src/main.cpp.obj: \
+ F:/cpp/personalProject/TinySoftwareRenderer/windows/src/main.cpp \
+ F:/cpp/personalProject/TinySoftwareRenderer/windows/headers/Win64.h \
  F:/make/w64devkit-1.23.0/w64devkit/x86_64-w64-mingw32/include/windows.h \
  F:/make/w64devkit-1.23.0/w64devkit/x86_64-w64-mingw32/include/_mingw.h \
  F:/make/w64devkit-1.23.0/w64devkit/x86_64-w64-mingw32/include/_mingw_mac.h \
@@ -396,4 +396,25 @@ CMakeFiles/WinApp.dir/src/Window.cpp.obj: \
  F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/basic_ios.tcc \
  F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/ostream.tcc \
  F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/istream \
- F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/istream.tcc
+ F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/istream.tcc \
+ F:/cpp/personalProject/TinySoftwareRenderer/windows/headers/Buffer.h \
+ F:/cpp/personalProject/TinySoftwareRenderer/windows/headers/Window.h \
+ F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/memory \
+ F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/stl_tempbuf.h \
+ F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/stl_uninitialized.h \
+ F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/stl_raw_storage_iter.h \
+ F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/align.h \
+ F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/stdint.h \
+ F:/make/w64devkit-1.23.0/w64devkit/x86_64-w64-mingw32/include/stdint.h \
+ F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/unique_ptr.h \
+ F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/shared_ptr.h \
+ F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/shared_ptr_base.h \
+ F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/allocated_ptr.h \
+ F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/ext/aligned_buffer.h \
+ F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/ext/concurrence.h \
+ F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/shared_ptr_atomic.h \
+ F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/atomic_base.h \
+ F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/atomic_lockfree_defines.h \
+ F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/backward/auto_ptr.h \
+ F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/pstl/glue_memory_defs.h \
+ F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/pstl/execution_defs.h

@@ -49,5 +49,5 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
-  "CMakeFiles/WinApp.dir/DependInfo.cmake"
+  "CMakeFiles/program.dir/DependInfo.cmake"
   )

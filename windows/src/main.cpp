@@ -1,32 +1,29 @@
-#include "../headers/Window.h"
+#include "../headers/win64.h"
 #include <iostream>
+#include <memory>
+
+typedef Win64 window_t;
 
 int main() {
   // std::cout << "Creating window\n";
 
-  Window *pWindow = new Window();
+  std::unique_ptr<Win64> pWindow = std::make_unique<window_t>();
 
   if (pWindow == nullptr) {
-    std::cout << "window is null\n";
-    delete pWindow;
+    std::cout << "fail to create a window\n";
     return 0;
   }
 
   bool running = true;
 
   while (running) {
-    std::cout << "in render loop\n";
+    // std::cout << "in render loop\n";
 
     if (!pWindow->ProcessMessages()) {
       std::cout << "Closing Window\n";
       running = false;
     }
-
-    // render
-    Sleep(10);
   }
-
-  delete pWindow;
 
   return 0;
 }

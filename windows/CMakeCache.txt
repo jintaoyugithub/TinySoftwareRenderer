@@ -113,7 +113,7 @@ CMAKE_FIND_PACKAGE_REDIRECTS_DIR:STATIC=F:/cpp/personalProject/TinySoftwareRende
 CMAKE_GNUtoMS:BOOL=OFF
 
 //Install path prefix, prepended onto install directories.
-CMAKE_INSTALL_PREFIX:PATH=C:/Program Files (x86)/WinApp
+CMAKE_INSTALL_PREFIX:PATH=C:/Program Files (x86)/program
 
 //Path to a program.
 CMAKE_LINKER:FILEPATH=F:/make/w64devkit-1.23.0/w64devkit/bin/ld.exe
@@ -157,7 +157,7 @@ CMAKE_PROJECT_DESCRIPTION:STATIC=
 CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=WinApp
+CMAKE_PROJECT_NAME:STATIC=program
 
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=F:/make/w64devkit-1.23.0/w64devkit/bin/ranlib.exe
@@ -243,13 +243,13 @@ CMAKE_TAPI:FILEPATH=CMAKE_TAPI-NOTFOUND
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 
 //Value Computed by CMake
-WinApp_BINARY_DIR:STATIC=F:/cpp/personalProject/TinySoftwareRenderer/windows
+program_BINARY_DIR:STATIC=F:/cpp/personalProject/TinySoftwareRenderer/windows
 
 //Value Computed by CMake
-WinApp_IS_TOP_LEVEL:STATIC=ON
+program_IS_TOP_LEVEL:STATIC=ON
 
 //Value Computed by CMake
-WinApp_SOURCE_DIR:STATIC=F:/cpp/personalProject/TinySoftwareRenderer/windows
+program_SOURCE_DIR:STATIC=F:/cpp/personalProject/TinySoftwareRenderer/windows
 
 
 ########################
