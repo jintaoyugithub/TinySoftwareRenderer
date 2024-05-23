@@ -8,6 +8,7 @@
 
 class Win64 : public Window {
 public:
+  // why pure class will need a constructor
   Win64(int width = 800, int height = 600, const char *title = "Title",
         const char *className = "win64 class");
   ~Win64();
@@ -18,8 +19,8 @@ public:
   // handle the devices input
   bool ProcessMessages();
 
-  void handleKeyboardMsg(int key) override;
-  void handleMouseButtonMsg(int button) override;
+  void handleKeyboardMsg(keyboardInput key) override;
+  void handleMouseButtonMsg(mouseInput button) override;
   void handleMouseScroolMsg(float offset) override;
 
   // handle the graphics drawing

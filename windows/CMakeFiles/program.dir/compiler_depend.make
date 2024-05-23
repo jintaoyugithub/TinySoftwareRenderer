@@ -446,10 +446,15 @@ CMakeFiles/program.dir/src/main.cpp.obj: src/main.cpp \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/avxvnniintrin.h \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/bmi2intrin.h \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/bmiintrin.h \
+  F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/backward/auto_ptr.h \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/backward/binders.h \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bit \
+  F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/align.h \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/alloc_traits.h \
+  F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/allocated_ptr.h \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/allocator.h \
+  F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/atomic_base.h \
+  F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/atomic_lockfree_defines.h \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/basic_ios.h \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/basic_ios.tcc \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/basic_string.h \
@@ -487,6 +492,9 @@ CMakeFiles/program.dir/src/main.cpp.obj: src/main.cpp \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/range_access.h \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/refwrap.h \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/requires_hosted.h \
+  F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/shared_ptr.h \
+  F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/shared_ptr_atomic.h \
+  F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/shared_ptr_base.h \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/std_abs.h \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/stl_algobase.h \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/stl_construct.h \
@@ -495,10 +503,14 @@ CMakeFiles/program.dir/src/main.cpp.obj: src/main.cpp \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/stl_iterator_base_funcs.h \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/stl_iterator_base_types.h \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/stl_pair.h \
+  F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/stl_raw_storage_iter.h \
+  F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/stl_tempbuf.h \
+  F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/stl_uninitialized.h \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/streambuf.tcc \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/streambuf_iterator.h \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/string_view.tcc \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/stringfwd.h \
+  F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/unique_ptr.h \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/uses_allocator.h \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/uses_allocator_args.h \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/utility.h \
@@ -515,8 +527,10 @@ CMakeFiles/program.dir/src/main.cpp.obj: src/main.cpp \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/debug/assertions.h \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/debug/debug.h \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/exception \
+  F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/ext/aligned_buffer.h \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/ext/alloc_traits.h \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/ext/atomicity.h \
+  F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/ext/concurrence.h \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/ext/numeric_traits.h \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/ext/string_conversions.h \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/ext/type_traits.h \
@@ -525,8 +539,11 @@ CMakeFiles/program.dir/src/main.cpp.obj: src/main.cpp \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/iosfwd \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/iostream \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/istream \
+  F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/memory \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/new \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/ostream \
+  F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/pstl/execution_defs.h \
+  F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/pstl/glue_memory_defs.h \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/pstl/pstl_config.h \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/stdexcept \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/stdlib.h \
@@ -592,6 +609,7 @@ CMakeFiles/program.dir/src/main.cpp.obj: src/main.cpp \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/smmintrin.h \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/stdarg.h \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/stddef.h \
+  F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/stdint.h \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/syslimits.h \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/tbmintrin.h \
   F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/tmmintrin.h \
@@ -741,6 +759,7 @@ CMakeFiles/program.dir/src/main.cpp.obj: src/main.cpp \
   F:/make/w64devkit-1.23.0/w64devkit/x86_64-w64-mingw32/include/specstrings.h \
   F:/make/w64devkit-1.23.0/w64devkit/x86_64-w64-mingw32/include/stdarg.h \
   F:/make/w64devkit-1.23.0/w64devkit/x86_64-w64-mingw32/include/stddef.h \
+  F:/make/w64devkit-1.23.0/w64devkit/x86_64-w64-mingw32/include/stdint.h \
   F:/make/w64devkit-1.23.0/w64devkit/x86_64-w64-mingw32/include/stdio.h \
   F:/make/w64devkit-1.23.0/w64devkit/x86_64-w64-mingw32/include/stdlib.h \
   F:/make/w64devkit-1.23.0/w64devkit/x86_64-w64-mingw32/include/stralign.h \
@@ -896,6 +915,8 @@ F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/avx
 
 F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/avx512ifmavlintrin.h:
 
+F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/ext/aligned_buffer.h:
+
 F:/make/w64devkit-1.23.0/w64devkit/x86_64-w64-mingw32/include/pshpack2.h:
 
 F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/x86gprintrin.h:
@@ -983,6 +1004,8 @@ F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++
 F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/vpclmulqdqintrin.h:
 
 F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/basic_string.tcc:
+
+F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/shared_ptr.h:
 
 F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/stl_iterator.h:
 
@@ -1230,6 +1253,8 @@ F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/clf
 
 F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/clwbintrin.h:
 
+F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/shared_ptr_atomic.h:
+
 F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/rtmintrin.h:
 
 F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/clzerointrin.h:
@@ -1376,6 +1401,8 @@ F:/make/w64devkit-1.23.0/w64devkit/x86_64-w64-mingw32/include/commdlg.h:
 
 F:/make/w64devkit-1.23.0/w64devkit/x86_64-w64-mingw32/include/concurrencysal.h:
 
+F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/unique_ptr.h:
+
 F:/make/w64devkit-1.23.0/w64devkit/x86_64-w64-mingw32/include/corecrt.h:
 
 F:/make/w64devkit-1.23.0/w64devkit/x86_64-w64-mingw32/include/corecrt_startup.h:
@@ -1401,6 +1428,8 @@ F:/make/w64devkit-1.23.0/w64devkit/x86_64-w64-mingw32/include/dlgs.h:
 F:/make/w64devkit-1.23.0/w64devkit/x86_64-w64-mingw32/include/locale.h:
 
 F:/make/w64devkit-1.23.0/w64devkit/x86_64-w64-mingw32/include/dpapi.h:
+
+F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/shared_ptr_base.h:
 
 F:/make/w64devkit-1.23.0/w64devkit/x86_64-w64-mingw32/include/inaddr.h:
 
@@ -1450,6 +1479,8 @@ F:/make/w64devkit-1.23.0/w64devkit/x86_64-w64-mingw32/include/mmiscapi2.h:
 
 F:/make/w64devkit-1.23.0/w64devkit/x86_64-w64-mingw32/include/mmsystem.h:
 
+F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/pstl/glue_memory_defs.h:
+
 F:/make/w64devkit-1.23.0/w64devkit/x86_64-w64-mingw32/include/unknwn.h:
 
 F:/make/w64devkit-1.23.0/w64devkit/x86_64-w64-mingw32/include/sdks/_mingw_ddk.h:
@@ -1473,6 +1504,8 @@ F:/make/w64devkit-1.23.0/w64devkit/x86_64-w64-mingw32/include/playsoundapi.h:
 F:/make/w64devkit-1.23.0/w64devkit/x86_64-w64-mingw32/include/poppack.h:
 
 F:/make/w64devkit-1.23.0/w64devkit/x86_64-w64-mingw32/include/processthreadsapi.h:
+
+F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/ext/concurrence.h:
 
 F:/make/w64devkit-1.23.0/w64devkit/x86_64-w64-mingw32/include/processtopologyapi.h:
 
@@ -1580,8 +1613,32 @@ F:/make/w64devkit-1.23.0/w64devkit/x86_64-w64-mingw32/include/winperf.h:
 
 F:/make/w64devkit-1.23.0/w64devkit/x86_64-w64-mingw32/include/winscard.h:
 
+F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/atomic_base.h:
+
 F:/make/w64devkit-1.23.0/w64devkit/x86_64-w64-mingw32/include/wow64apiset.h:
 
 F:/make/w64devkit-1.23.0/w64devkit/x86_64-w64-mingw32/include/wtypes.h:
 
 src/main.cpp:
+
+F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/backward/auto_ptr.h:
+
+F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/align.h:
+
+F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/allocated_ptr.h:
+
+F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/atomic_lockfree_defines.h:
+
+F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/stl_raw_storage_iter.h:
+
+F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/stl_tempbuf.h:
+
+F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/bits/stl_uninitialized.h:
+
+F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/memory:
+
+F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/c++/pstl/execution_defs.h:
+
+F:/make/w64devkit-1.23.0/w64devkit/lib/gcc/x86_64-w64-mingw32/14.1.0/include/stdint.h:
+
+F:/make/w64devkit-1.23.0/w64devkit/x86_64-w64-mingw32/include/stdint.h:

@@ -9,7 +9,7 @@ public:
   virtual inline size_t getWidth() const { return m_width; }
   virtual inline size_t getHeight() const { return m_height; }
 
-private:
+protected:
   size_t m_width;
   size_t m_height;
   T *data;

@@ -61,11 +61,11 @@ void Win64::createWindow(int width, int height, const char *title) {}
 void Win64::destoryWindow() { DestroyWindow(m_hWnd); }
 
 // handle the devices input
-void Win64::handleKeyboardMsg(int key) {
+void Win64::handleKeyboardMsg(keyboardInput key) {
   std::cout << "handling keyboard message\n";
 }
 
-void Win64::handleMouseButtonMsg(int button) {}
+void Win64::handleMouseButtonMsg(mouseInput button) {}
 
 void Win64::handleMouseScroolMsg(float offset) {}
 
@@ -114,7 +114,7 @@ LRESULT Win64::wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     PostQuitMessage(0);
     break;
   case WM_KEYDOWN:
-    handleKeyboardMsg(wParam);
+    handleKeyboardMsg(static_cast<keyboardInput>(wParam));
     break;
   case WM_KEYUP:
     break;
