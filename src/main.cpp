@@ -10,6 +10,7 @@ const TGAColor white = TGAColor(255, 255, 255, 255);
 const TGAColor red = TGAColor(255, 0, 0, 255);
 const TGAColor green = TGAColor(0, 255, 0, 255);
 const TGAColor blue = TGAColor(0, 0, 255, 255);
+const Vec3f lightDir = Vec3f(0, 0, -1);
 // -- draw mode
 enum drawMode { wireframe, filledTri };
 // -- size of the image
@@ -25,61 +26,26 @@ void Line(Vec2i, Vec2i, TGAImage &, const TGAColor &);
 // -- remap func
 int remap(float, Vec2i, Vec2i);
 // -- draw triangles func, line sweep
-void TriangleLineSweep(std::vector<Vec2i> &, TGAImage &, const TGAColor &);
+void TriangleLineSweep(const Vec2i *, TGAImage &, const TGAColor &);
 // -- draw triangles func, barycentric coordinates
 bool isAllGreater0(const int *, int);
 bool isAllLess0(const int *, int);
-bool isInBarycentric(const Vec2i &, const std::vector<Vec2i> &);
+bool isInBarycentric(const Vec2i &, const Vec2i *);
 void drawBoundingBox(const Vec2i &, const Vec2i &, TGAImage &,
                      const TGAColor &);
-void TriangleBarycentric(std::vector<Vec2i> &, TGAImage &, const TGAColor &);
+void TriangleBarycentric(const Vec2i *, TGAImage &, const TGAColor &);
 // -- draw obj models
 void drawModel(Model *, TGAImage &, int);
 
 int main(int argc, char **argv) {
-  TGAImage image(100, 100, TGAImage::RGB);
+  TGAImage image(width, height, TGAImage::RGB);
   // load models
   model = new Model("../models/obj/humanHead.obj");
 
-  /* draw filled human head */
-  TGAImage humanHeadFilledImage(width, height, TGAImage::RGB);
-  drawModel(model, humanHeadFilledImage, drawMode::filledTri);
-  humanHeadFilledImage.flip_vertically();
-  humanHeadFilledImage.write_tga_file("output/filledHumanHead.tga");
-
-  /* draw triangle */
-  TGAImage triangleImage(200, 200, TGAImage::RGB);
-  std::vector<Vec2i> tri1 = {Vec2i(10, 70), Vec2i(50, 160), Vec2i(70, 80)};
-  std::vector<Vec2i> tri2 = {Vec2i(180, 50), Vec2i(150, 1), Vec2i(70, 180)};
-  std::vector<Vec2i> tri3 = {Vec2i(180, 150), Vec2i(120, 160), Vec2i(130, 180)};
-
-  TriangleLineSweep(tri1, triangleImage, white);
-  TriangleBarycentric(tri2, triangleImage, green);
-  TriangleLineSweep(tri3, triangleImage, blue);
-  triangleImage.flip_vertically();
-  triangleImage.write_tga_file("output/barycentricTri.tga");
-
-  /* draw models */
-  TGAImage humanHeadImage(width, height, TGAImage::RGB);
-  drawModel(model, humanHeadImage, drawMode::wireframe);
-
-  humanHeadImage.flip_vertically(); // i want to have the origin at the left
-                                    // bottom corner of the image
-  humanHeadImage.write_tga_file("output/humanHead.tga");
-
-  /* draw lines in the image */
-  Line(Vec2i(13, 20), Vec2i(80, 40), image, white);
-  Line(Vec2i(20, 13), Vec2i(40, 80), image, white);
-  Line(Vec2i(80, 40), Vec2i(13, 20), image, red);
-
-  image.flip_vertically(); // i want to have the origin at the left bottom
-                           // corner of the image
-  // image.write_tga_file("output/stable&steepLine.tga");
-  image.write_tga_file("output/perfectStable&steepLine.tga");
-
-  /* draw dots in the images */
-  image.set(52, 41, red);
-  image.write_tga_file("output/dots.tga");
+  // draw models
+  drawModel(model, image, drawMode::filledTri);
+  image.flip_vertically();
+  image.write_tga_file("output/humanHeadWithLight.tga");
 
   delete model;
   return 0;
@@ -176,6 +142,7 @@ void TriangleLineSweep(std::vector<Vec2i> &vertices, TGAImage &img,
     // make sure it's render from left to right
     if (boundaryPointLeft.x > boundaryPointRight.x)
       std::swap(boundaryPointLeft, boundaryPointRight);
+
     for (int j = boundaryPointLeft.x; j < boundaryPointRight.x; j++) {
       img.set(j, vertices[0].y + i, col);
     }
@@ -209,14 +176,10 @@ bool isAllLess0(const int *arr, int size) {
   return true;
 }
 
-bool isInBarycentric(const Vec2i &p, const std::vector<Vec2i> &vert) {
-  if (vert.size() != 3) {
-    std::cout << "wrong triangle sieze" << std::endl;
-    return false;
-  }
+bool isInBarycentric(const Vec2i &p, const Vec2i *vert) {
   int zValues[3] = {0};
   // vertices A,B and C are sorted from the lowest y value to the highest
-  for (int i = 0; i < vert.size(); i++) {
+  for (int i = 0; i < 3; i++) {
     Vec2i endpoint2p = p - vert[i];
     Vec2i edge = vert[(i + 1) % 3] - vert[i];
     Vec3i endpoint2p3d = Vec3i(endpoint2p.x, endpoint2p.y, 1);
@@ -243,22 +206,28 @@ void drawBoundingBox(const Vec2i &lt, const Vec2i &rb, TGAImage &img,
   Line(rt, lt, img, col);
 }
 
-void TriangleBarycentric(std::vector<Vec2i> &vert, TGAImage &img,
+void TriangleBarycentric(Vec2i *v_screenCoord, TGAImage &img,
                          const TGAColor &col) {
   // find the bounding box
-  Vec2i leftTop = Vec2i(std::min(std::min(vert[0].x, vert[1].x), vert[2].x),
-                        std::max(std::max(vert[0].y, vert[1].y), vert[2].y));
-  Vec2i rightBot = Vec2i(std::max(std::max(vert[0].x, vert[1].x), vert[2].x),
-                         std::min(std::min(vert[0].y, vert[1].y), vert[2].y));
+  Vec2i leftTop =
+      Vec2i(std::min(std::min(v_screenCoord[0].x, v_screenCoord[1].x),
+                     v_screenCoord[2].x),
+            std::max(std::max(v_screenCoord[0].y, v_screenCoord[1].y),
+                     v_screenCoord[2].y));
+  Vec2i rightBot =
+      Vec2i(std::max(std::max(v_screenCoord[0].x, v_screenCoord[1].x),
+                     v_screenCoord[2].x),
+            std::min(std::min(v_screenCoord[0].y, v_screenCoord[1].y),
+                     v_screenCoord[2].y));
 
   // draw the bounding box
-  drawBoundingBox(leftTop, rightBot, img, green);
+  // drawBoundingBox(leftTop, rightBot, img, green);
 
   // loop the bounding box of a tri to determine if the pixel is inside the
   // tri filled the tri rows by rows
   for (int i = leftTop.y; i > rightBot.y; i--) {
     for (int j = leftTop.x; j < rightBot.x; j++) {
-      if (isInBarycentric(Vec2i(j, i), vert)) {
+      if (isInBarycentric(Vec2i(j, i), v_screenCoord)) {
         img.set(j, i, col);
       }
     }
@@ -291,17 +260,35 @@ void drawModel(Model *model, TGAImage &img, int drawMode) {
       // get face
       std::vector<int> singleFace = model->face(i);
       // get vertices to draw the line
-      std::vector<Vec2i> triVertices;
+      Vec2i screenCoords[3];
+      Vec3f worldCoords[3];
       for (int j = 0; j < 3; j++) {
         // loop to find the v0, v1 and v2
         Vec3f v = model->vert(singleFace[j]);
         // remap the data in v0 and v1 from -1~1 to 0~width or 0~height
         int x = remap(v.x, Vec2i(-1, 1), Vec2i(0, width));
         int y = remap(v.y, Vec2i(-1, 1), Vec2i(0, height));
-        triVertices.push_back(Vec2i(x, y));
+
+        screenCoords[j] = Vec2i(x, y);
+        worldCoords[j] = v;
       }
+
+      // calculate the normal
+      Vec3f norm =
+          (worldCoords[2] - worldCoords[0]) ^ (worldCoords[1] - worldCoords[0]);
+      norm.normalize();
+
+      // calculate the light effect
+      float lightIntensity = norm * lightDir;
+      TGAColor col = TGAColor(255 * lightIntensity, 255 * lightIntensity,
+                              255 * lightIntensity, 255);
+
       // draw the triangle
-      TriangleBarycentric(triVertices, img, white);
+      // since we don't do z test here, so we have to remove the face that the
+      // light can't reach
+      if (lightIntensity > 0) {
+        TriangleBarycentric(screenCoords, img, col);
+      }
     }
     break;
   default:
