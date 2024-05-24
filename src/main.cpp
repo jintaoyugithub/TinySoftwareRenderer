@@ -3,6 +3,8 @@
 #include "tgaimage.h"
 #include <cmath>
 #include <iostream>
+#include <limits>
+#include <memory>
 #include <vector>
 
 /* constants declaration */
@@ -19,6 +21,8 @@ const int height = 800;
 
 /* variables declaration */
 Model *model = nullptr;
+// zBuffer
+float *zBuffer = new float[width * height];
 
 /* functions declaration */
 // -- draw line func
@@ -30,24 +34,34 @@ void TriangleLineSweep(const Vec2i *, TGAImage &, const TGAColor &);
 // -- draw triangles func, barycentric coordinates
 bool isAllGreater0(const int *, int);
 bool isAllLess0(const int *, int);
-bool isInBarycentric(const Vec2i &, const Vec2i *);
+bool isInBarycentric(const Vec2i &, const Vec2f *);
+float *barycentricCoords(const Vec2i &, const Vec3f *);
 void drawBoundingBox(const Vec2i &, const Vec2i &, TGAImage &,
                      const TGAColor &);
-void TriangleBarycentric(const Vec2i *, TGAImage &, const TGAColor &);
+void TriangleBarycentric(const Vec2f *, float *zBuffer, TGAImage &,
+                         const TGAColor &);
+
+// -- z buffer
+void updateZBuffer(float *zBuffer, int x, int y, float value);
+void cleanZBuffer(float *zBuffer);
+
 // -- draw obj models
-void drawModel(Model *, TGAImage &, int);
+void drawModel(Model *, float *zBuffer, TGAImage &, int);
 
 int main(int argc, char **argv) {
   TGAImage image(width, height, TGAImage::RGB);
   // load models
   model = new Model("../models/obj/humanHead.obj");
+  // init the z buffer
+  cleanZBuffer(zBuffer);
 
   // draw models
-  drawModel(model, image, drawMode::filledTri);
+  drawModel(model, zBuffer, image, drawMode::filledTri);
   image.flip_vertically();
-  image.write_tga_file("output/humanHeadWithLight.tga");
+  image.write_tga_file("output/test.tga");
 
   delete model;
+  delete[] zBuffer;
   return 0;
 }
 
@@ -176,16 +190,19 @@ bool isAllLess0(const int *arr, int size) {
   return true;
 }
 
-bool isInBarycentric(const Vec2i &p, const Vec2i *vert) {
+bool isInBarycentric(const Vec2i &p, const Vec2f *vert) {
   int zValues[3] = {0};
   // vertices A,B and C are sorted from the lowest y value to the highest
   for (int i = 0; i < 3; i++) {
-    Vec2i endpoint2p = p - vert[i];
-    Vec2i edge = vert[(i + 1) % 3] - vert[i];
-    Vec3i endpoint2p3d = Vec3i(endpoint2p.x, endpoint2p.y, 1);
-    Vec3i edge3d = Vec3i(edge.x, edge.y, 1);
-    // do cross product
-    Vec3i result = endpoint2p3d ^ edge3d;
+    // we don't have cast func from vec2i to vec2f
+    Vec2f endpoint2p = Vec2f(p.x, p.y) - Vec2f(vert[i].x, vert[i].y);
+    Vec2f edge = Vec2f(vert[(i + 1) % 3].x, vert[(i + 1) % 3].y) -
+                 Vec2f(vert[i].x, vert[i].y);
+    // convert them into 3d as cross product doesn't make scene in 2d
+    Vec3f endpoint2p3d = Vec3f(endpoint2p.x, endpoint2p.y, 1.0);
+    Vec3f edge3d = Vec3f(edge.x, edge.y, 1);
+    // do the cross product
+    Vec3f result = endpoint2p3d ^ edge3d;
     // store the z value of all corss product
     zValues[i] = result.z;
   }
@@ -194,6 +211,42 @@ bool isInBarycentric(const Vec2i &p, const Vec2i *vert) {
     return true;
 
   return false;
+}
+
+float *barycentricCoords(const Vec2i &p, const Vec2f *vertices) {
+  // we assume that the vertices is sorted counter clockwise
+  if (isInBarycentric(p, vertices)) {
+    // u,v,w are equal to the ration of the corresponding triangle
+    float *weight;
+
+    // trun 2d into 3d
+    Vec3f p3d = Vec3f(p.x, p.y, 1.0);
+    Vec3f *verts3d;
+
+    for (int i = 0; i < 3; i++) {
+      verts3d[i] = Vec3f(vertices[i].x, vertices[i].y, 1.0);
+    }
+
+    // use cross product to compute the barycentric coordinates
+    // Cabc: cross product for triangle abc
+    Vec3f Cabc = (verts3d[2] - verts3d[0]) ^ (verts3d[1] - verts3d[0]);
+    // Sabc: area of triangle abc
+    float Sabc = std::sqrt(Cabc.x * Cabc.x + Cabc.y * Cabc.y + Cabc.z * Cabc.z);
+    for (int i = 0; i < 3; i++) {
+      Vec3f endpoint2p = p3d - verts3d[i];
+      Vec3f edge = verts3d[(i + 1) % 3] - verts3d[i];
+      Vec3f CrossP = endpoint2p ^ edge;
+      // Spart: part area
+      float Spart = std::sqrt(CrossP.x * CrossP.x + CrossP.y * CrossP.y +
+                              CrossP.z * CrossP.z);
+      weight[i] = Spart / Sabc;
+    }
+
+    return weight;
+  }
+
+  std::cout << "the vertex is not in the triangle\n";
+  return 0;
 }
 
 void drawBoundingBox(const Vec2i &lt, const Vec2i &rb, TGAImage &img,
@@ -206,35 +259,34 @@ void drawBoundingBox(const Vec2i &lt, const Vec2i &rb, TGAImage &img,
   Line(rt, lt, img, col);
 }
 
-void TriangleBarycentric(Vec2i *v_screenCoord, TGAImage &img,
+// problem must be here
+void TriangleBarycentric(Vec2f *vertices, float *zBuffer, TGAImage &img,
                          const TGAColor &col) {
   // find the bounding box
   Vec2i leftTop =
-      Vec2i(std::min(std::min(v_screenCoord[0].x, v_screenCoord[1].x),
-                     v_screenCoord[2].x),
-            std::max(std::max(v_screenCoord[0].y, v_screenCoord[1].y),
-                     v_screenCoord[2].y));
+      Vec2i(std::min(std::min(vertices[0].x, vertices[1].x), vertices[2].x),
+            std::max(std::max(vertices[0].y, vertices[1].y), vertices[2].y));
   Vec2i rightBot =
-      Vec2i(std::max(std::max(v_screenCoord[0].x, v_screenCoord[1].x),
-                     v_screenCoord[2].x),
-            std::min(std::min(v_screenCoord[0].y, v_screenCoord[1].y),
-                     v_screenCoord[2].y));
+      Vec2i(std::max(std::max(vertices[0].x, vertices[1].x), vertices[2].x),
+            std::min(std::min(vertices[0].y, vertices[1].y), vertices[2].y));
+
+  std::cout << "left top: " << leftTop.x << " " << leftTop.y << std::endl;
 
   // draw the bounding box
-  // drawBoundingBox(leftTop, rightBot, img, green);
+  drawBoundingBox(leftTop, rightBot, img, green);
 
   // loop the bounding box of a tri to determine if the pixel is inside the
   // tri filled the tri rows by rows
   for (int i = leftTop.y; i > rightBot.y; i--) {
     for (int j = leftTop.x; j < rightBot.x; j++) {
-      if (isInBarycentric(Vec2i(j, i), v_screenCoord)) {
+      if (isInBarycentric(Vec2i(j, i), vertices)) {
         img.set(j, i, col);
       }
     }
   }
 }
 
-void drawModel(Model *model, TGAImage &img, int drawMode) {
+void drawModel(Model *model, float *zBuffer, TGAImage &img, int drawMode) {
   switch (drawMode) {
   case drawMode::wireframe:
     // extra faces and vertices from models
@@ -260,7 +312,7 @@ void drawModel(Model *model, TGAImage &img, int drawMode) {
       // get face
       std::vector<int> singleFace = model->face(i);
       // get vertices to draw the line
-      Vec2i screenCoords[3];
+      Vec2f screenCoords[3];
       Vec3f worldCoords[3];
       for (int j = 0; j < 3; j++) {
         // loop to find the v0, v1 and v2
@@ -269,7 +321,7 @@ void drawModel(Model *model, TGAImage &img, int drawMode) {
         int x = remap(v.x, Vec2i(-1, 1), Vec2i(0, width));
         int y = remap(v.y, Vec2i(-1, 1), Vec2i(0, height));
 
-        screenCoords[j] = Vec2i(x, y);
+        screenCoords[j] = Vec2f(x, y);
         worldCoords[j] = v;
       }
 
@@ -287,12 +339,28 @@ void drawModel(Model *model, TGAImage &img, int drawMode) {
       // since we don't do z test here, so we have to remove the face that the
       // light can't reach
       if (lightIntensity > 0) {
-        TriangleBarycentric(screenCoords, img, col);
+        // wrong: worldCoords is range from -1 to 1
+        // TriangleBarycentric(worldCoords, zBuffer, img, col);
+        TriangleBarycentric(screenCoords, zBuffer, img, col);
       }
     }
     break;
   default:
     std::cout << "please enter the proper drawMode" << std::endl;
     break;
+  }
+}
+
+// -- z buffer
+void updateZBuffer(float *zBuffer, int x, int y, float value) {
+  zBuffer[x + y * width] = value;
+}
+
+void cleanZBuffer(float *zBuffer) {
+  for (int y = 0; y < height; y++) {
+    for (int x = 0; x < width; x++) {
+      int idx = x + width * y;
+      zBuffer[idx] = std::numeric_limits<float>::min();
+    }
   }
 }
