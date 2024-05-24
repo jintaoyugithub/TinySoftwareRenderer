@@ -1,6 +1,7 @@
 #include "geometry.h"
 #include "model.h"
 #include "tgaimage.h"
+#include <array>
 #include <cmath>
 #include <iostream>
 #include <limits>
@@ -35,10 +36,10 @@ void TriangleLineSweep(const Vec2i *, TGAImage &, const TGAColor &);
 bool isAllGreater0(const int *, int);
 bool isAllLess0(const int *, int);
 bool isInBarycentric(const Vec2i &, const Vec2f *);
-float *barycentricCoords(const Vec2i &, const Vec3f *);
+std::array<float, 3> barycentricCoords(const Vec2i &, const Vec2f *);
 void drawBoundingBox(const Vec2i &, const Vec2i &, TGAImage &,
                      const TGAColor &);
-void TriangleBarycentric(const Vec2f *, float *zBuffer, TGAImage &,
+void TriangleBarycentric(const Vec3f *, float *zBuffer, TGAImage &,
                          const TGAColor &);
 
 // -- z buffer
@@ -213,23 +214,26 @@ bool isInBarycentric(const Vec2i &p, const Vec2f *vert) {
   return false;
 }
 
-float *barycentricCoords(const Vec2i &p, const Vec2f *vertices) {
+std::array<float, 3> barycentricCoords(const Vec2i &p, const Vec2f *vertices) {
+  // u,v,w are equal to the ration of the corresponding triangle
+  std::array<float, 3> weight = {0.0f, 0.0f, 0.0f};
   // we assume that the vertices is sorted counter clockwise
   if (isInBarycentric(p, vertices)) {
-    // u,v,w are equal to the ration of the corresponding triangle
-    float *weight;
 
     // trun 2d into 3d
     Vec3f p3d = Vec3f(p.x, p.y, 1.0);
-    Vec3f *verts3d;
+    // wrong: but why they need a init, for memory?
+    // Vec3f* verts3d;
+    std::array<Vec3f, 3> verts3d;
 
     for (int i = 0; i < 3; i++) {
       verts3d[i] = Vec3f(vertices[i].x, vertices[i].y, 1.0);
     }
 
-    // use cross product to compute the barycentric coordinates
-    // Cabc: cross product for triangle abc
+    // use cross product to compute the barycentric coordinates */
+    // Cabc: cross product for triangle abc */
     Vec3f Cabc = (verts3d[2] - verts3d[0]) ^ (verts3d[1] - verts3d[0]);
+
     // Sabc: area of triangle abc
     float Sabc = std::sqrt(Cabc.x * Cabc.x + Cabc.y * Cabc.y + Cabc.z * Cabc.z);
     for (int i = 0; i < 3; i++) {
@@ -238,15 +242,15 @@ float *barycentricCoords(const Vec2i &p, const Vec2f *vertices) {
       Vec3f CrossP = endpoint2p ^ edge;
       // Spart: part area
       float Spart = std::sqrt(CrossP.x * CrossP.x + CrossP.y * CrossP.y +
+
                               CrossP.z * CrossP.z);
       weight[i] = Spart / Sabc;
     }
-
-    return weight;
+  } else {
+    std::cout << "the vertex is not in the triangle\n";
   }
 
-  std::cout << "the vertex is not in the triangle\n";
-  return 0;
+  return weight;
 }
 
 void drawBoundingBox(const Vec2i &lt, const Vec2i &rb, TGAImage &img,
@@ -260,7 +264,7 @@ void drawBoundingBox(const Vec2i &lt, const Vec2i &rb, TGAImage &img,
 }
 
 // problem must be here
-void TriangleBarycentric(Vec2f *vertices, float *zBuffer, TGAImage &img,
+void TriangleBarycentric(Vec3f *vertices, float *zBuffer, TGAImage &img,
                          const TGAColor &col) {
   // find the bounding box
   Vec2i leftTop =
@@ -270,17 +274,32 @@ void TriangleBarycentric(Vec2f *vertices, float *zBuffer, TGAImage &img,
       Vec2i(std::max(std::max(vertices[0].x, vertices[1].x), vertices[2].x),
             std::min(std::min(vertices[0].y, vertices[1].y), vertices[2].y));
 
-  std::cout << "left top: " << leftTop.x << " " << leftTop.y << std::endl;
-
   // draw the bounding box
-  drawBoundingBox(leftTop, rightBot, img, green);
+  // drawBoundingBox(leftTop, rightBot, img, green);
+
+  // convert to 2d, a stuipid method
+  Vec2f verts2d[3];
+  for (int i = 0; i < 3; i++) {
+    verts2d[i] = Vec2f(vertices[i].x, vertices[i].y);
+  }
 
   // loop the bounding box of a tri to determine if the pixel is inside the
   // tri filled the tri rows by rows
   for (int i = leftTop.y; i > rightBot.y; i--) {
     for (int j = leftTop.x; j < rightBot.x; j++) {
-      if (isInBarycentric(Vec2i(j, i), vertices)) {
-        img.set(j, i, col);
+      if (isInBarycentric(Vec2i(j, i), verts2d)) {
+        std::array<float, 3> weight = barycentricCoords(Vec2i(j, i), verts2d);
+
+        float z = 0;
+        for (int i = 0; i < 3; i++) {
+          z += vertices[i].z * weight[i];
+        }
+
+        if (zBuffer[int(j + i * width)] < z) {
+          TGAColor color = TGAColor(col.r * z, col.g * z, col.b * z, col.a);
+          updateZBuffer(zBuffer, j, i, z);
+          img.set(j, i, color);
+        }
       }
     }
   }
@@ -312,7 +331,7 @@ void drawModel(Model *model, float *zBuffer, TGAImage &img, int drawMode) {
       // get face
       std::vector<int> singleFace = model->face(i);
       // get vertices to draw the line
-      Vec2f screenCoords[3];
+      Vec3f screenCoords[3];
       Vec3f worldCoords[3];
       for (int j = 0; j < 3; j++) {
         // loop to find the v0, v1 and v2
@@ -321,7 +340,9 @@ void drawModel(Model *model, float *zBuffer, TGAImage &img, int drawMode) {
         int x = remap(v.x, Vec2i(-1, 1), Vec2i(0, width));
         int y = remap(v.y, Vec2i(-1, 1), Vec2i(0, height));
 
-        screenCoords[j] = Vec2f(x, y);
+        // screenCoords[j] = Vec2f(x, y);
+        // screenCoords is contain the z value of the vertex in world position
+        screenCoords[j] = Vec3f(x, y, v.z);
         worldCoords[j] = v;
       }
 
