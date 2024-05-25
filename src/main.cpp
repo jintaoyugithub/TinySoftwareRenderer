@@ -270,7 +270,7 @@ void drawBoundingBox(const Vec2i &lt, const Vec2i &rb, TGAImage &img,
 }
 
 // problem must be here
-void TriangleBarycentric(Vec3f *vertices, float *zBuffer, Vec2f *uv,
+void TriangleBarycentric(Vec3f *vertices, float *zBuffer, Vec2f *uvs,
                          TGAImage &img, TGAImage &texture,
                          const TGAColor &col) {
   // find the bounding box
@@ -313,11 +313,18 @@ void TriangleBarycentric(Vec3f *vertices, float *zBuffer, Vec2f *uv,
           TGAColor color = TGAColor(col.r * z, col.g * z, col.b * z, col.a);
           TGAColor colorDepth = TGAColor(255 * z, 255 * z, 255 * z, 255);
 
+          // interpolate the uv
+          Vec2f uv = Vec2f(0, 0);
+          for (int i = 0; i < 3; i++) {
+            uv.x += uvs[i].x * weight[i];
+            uv.y += uvs[i].y * weight[i];
+          }
+          TGAColor colTex = readColFromImg(texture, uv.x, uv.y);
           // update z buffer
           updateZBuffer(zBuffer, j, i, z);
 
           // set the image
-          img.set(j, i, colorDepth);
+          img.set(j, i, colTex);
         }
       }
     }
@@ -362,15 +369,16 @@ void drawModel(Model *model, float *zBuffer, TGAImage &img, TGAImage &texture,
         int x = remap(vert.x, Vec2i(-1, 1), Vec2i(0, width));
         int y = remap(vert.y, Vec2i(-1, 1), Vec2i(0, height));
 
-        // remap the uv
-        /* int u = remap(uv.x, Vec2i(-1, 1), Vec2i(0, width)); */
-        /* int v = remap(uv.y, Vec2i(-1, 1), Vec2i(0, width)); */
+        // remap the uv to image's width and height
+        int u = remap(uv.x, Vec2i(0, 1), Vec2i(0, texture.get_width()));
+        int v = remap(uv.y, Vec2i(0, 1), Vec2i(0, texture.get_height()));
 
         // screenCoords[j] = Vec2f(x, y);
         // screenCoords is contain the z value of the vertex in world position
         screenCoords[j] = Vec3f(x, y, vert.z);
         worldCoords[j] = vert;
-        uvs[j] = Vec2f(uv.x, uv.y);
+        // the origin of the image id upside down
+        uvs[j] = Vec2f(u, texture.get_height() - v);
       }
 
       // calculate the normal
