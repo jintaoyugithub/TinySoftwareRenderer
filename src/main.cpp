@@ -39,7 +39,7 @@ bool isInBarycentric(const Vec2i &, const Vec2f *);
 std::array<float, 3> barycentricCoords(const Vec2i &, const Vec2f *);
 void drawBoundingBox(const Vec2i &, const Vec2i &, TGAImage &,
                      const TGAColor &);
-void TriangleBarycentric(const Vec3f *, float *zBuffer, TGAImage &,
+void TriangleBarycentric(const Vec3f *, float *zBuffer, TGAImage &, TGAImage &,
                          const TGAColor &);
 
 // -- z buffer
@@ -47,10 +47,10 @@ void updateZBuffer(float *zBuffer, int x, int y, float value);
 void cleanZBuffer(float *zBuffer);
 
 // -- texture
-TGAColor &readColFromImg(TGAImage &, int, int);
+TGAColor readColFromImg(TGAImage &, int, int);
 
 // -- draw obj models
-void drawModel(Model *, float *zBuffer, TGAImage &, int);
+void drawModel(Model *, float *zBuffer, TGAImage &, TGAImage &, int);
 
 int main(int argc, char **argv) {
   TGAImage image(width, height, TGAImage::RGB);
@@ -60,9 +60,12 @@ int main(int argc, char **argv) {
   cleanZBuffer(zBuffer);
 
   // draw models
-  drawModel(model, zBuffer, image, drawMode::filledTri);
+  // read the texture
+  TGAImage texture;
+  texture.read_tga_file("../textures/african_head_diffuse.tga");
+  drawModel(model, zBuffer, image, texture, drawMode::filledTri);
   image.flip_vertically();
-  image.write_tga_file("output/humanHeadWithZBuffer.tga");
+  image.write_tga_file("output/test.tga");
 
   delete model;
   delete[] zBuffer;
@@ -268,7 +271,7 @@ void drawBoundingBox(const Vec2i &lt, const Vec2i &rb, TGAImage &img,
 
 // problem must be here
 void TriangleBarycentric(Vec3f *vertices, float *zBuffer, TGAImage &img,
-                         const TGAColor &col) {
+                         TGAImage &texture, const TGAColor &col) {
   // find the bounding box
   Vec2i leftTop =
       Vec2i(std::min(std::min(vertices[0].x, vertices[1].x), vertices[2].x),
@@ -298,20 +301,24 @@ void TriangleBarycentric(Vec3f *vertices, float *zBuffer, TGAImage &img,
           // z += vertices[i].z * weight[i];
 
           // remap vertices[i].z from -1-1 to 0-1
+          // remap func will return 0 since its return type is int
           z += (vertices[i].z * 0.5 + 0.5) * weight[i];
         }
 
         if (zBuffer[int(j + i * width)] < z) {
           TGAColor color = TGAColor(col.r * z, col.g * z, col.b * z, col.a);
+          TGAColor colorDepth = TGAColor(255 * z, 255 * z, 255 * z, 255);
+          TGAColor colorTex = readColFromImg(texture, j, i);
           updateZBuffer(zBuffer, j, i, z);
-          img.set(j, i, color);
+          img.set(j, i, colorTex);
         }
       }
     }
   }
 }
 
-void drawModel(Model *model, float *zBuffer, TGAImage &img, int drawMode) {
+void drawModel(Model *model, float *zBuffer, TGAImage &img, TGAImage &texture,
+               int drawMode) {
   switch (drawMode) {
   case drawMode::wireframe:
     // extra faces and vertices from models
@@ -368,7 +375,7 @@ void drawModel(Model *model, float *zBuffer, TGAImage &img, int drawMode) {
       if (lightIntensity > 0) {
         // wrong: worldCoords is range from -1 to 1
         // TriangleBarycentric(worldCoords, zBuffer, img, col);
-        TriangleBarycentric(screenCoords, zBuffer, img, col);
+        TriangleBarycentric(screenCoords, zBuffer, img, texture, col);
       }
     }
     break;
@@ -393,4 +400,4 @@ void cleanZBuffer(float *zBuffer) {
 }
 
 // -- texture
-TGAColor &readColFromImg(TGAImage &img, int x, int y) {}
+TGAColor readColFromImg(TGAImage &img, int x, int y) { return img.get(x, y); }
