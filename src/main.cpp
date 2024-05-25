@@ -46,6 +46,9 @@ void TriangleBarycentric(const Vec3f *, float *zBuffer, TGAImage &,
 void updateZBuffer(float *zBuffer, int x, int y, float value);
 void cleanZBuffer(float *zBuffer);
 
+// -- texture
+TGAColor &readColFromImg(TGAImage &, int, int);
+
 // -- draw obj models
 void drawModel(Model *, float *zBuffer, TGAImage &, int);
 
@@ -59,7 +62,7 @@ int main(int argc, char **argv) {
   // draw models
   drawModel(model, zBuffer, image, drawMode::filledTri);
   image.flip_vertically();
-  image.write_tga_file("output/test.tga");
+  image.write_tga_file("output/humanHeadWithZBuffer.tga");
 
   delete model;
   delete[] zBuffer;
@@ -292,7 +295,10 @@ void TriangleBarycentric(Vec3f *vertices, float *zBuffer, TGAImage &img,
 
         float z = 0;
         for (int i = 0; i < 3; i++) {
-          z += vertices[i].z * weight[i];
+          // z += vertices[i].z * weight[i];
+
+          // remap vertices[i].z from -1-1 to 0-1
+          z += (vertices[i].z * 0.5 + 0.5) * weight[i];
         }
 
         if (zBuffer[int(j + i * width)] < z) {
@@ -385,3 +391,6 @@ void cleanZBuffer(float *zBuffer) {
     }
   }
 }
+
+// -- texture
+TGAColor &readColFromImg(TGAImage &img, int x, int y) {}
