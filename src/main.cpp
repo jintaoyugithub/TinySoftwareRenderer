@@ -39,8 +39,8 @@ bool isInBarycentric(const Vec2i &, const Vec2f *);
 std::array<float, 3> barycentricCoords(const Vec2i &, const Vec2f *);
 void drawBoundingBox(const Vec2i &, const Vec2i &, TGAImage &,
                      const TGAColor &);
-void TriangleBarycentric(const Vec3f *, float *zBuffer, TGAImage &, TGAImage &,
-                         const TGAColor &);
+void TriangleBarycentric(const Vec3f *, float *zBuffer, Vec2f *uv, TGAImage &,
+                         TGAImage &, const TGAColor &);
 
 // -- z buffer
 void updateZBuffer(float *zBuffer, int x, int y, float value);
@@ -270,8 +270,9 @@ void drawBoundingBox(const Vec2i &lt, const Vec2i &rb, TGAImage &img,
 }
 
 // problem must be here
-void TriangleBarycentric(Vec3f *vertices, float *zBuffer, TGAImage &img,
-                         TGAImage &texture, const TGAColor &col) {
+void TriangleBarycentric(Vec3f *vertices, float *zBuffer, Vec2f *uv,
+                         TGAImage &img, TGAImage &texture,
+                         const TGAColor &col) {
   // find the bounding box
   Vec2i leftTop =
       Vec2i(std::min(std::min(vertices[0].x, vertices[1].x), vertices[2].x),
@@ -305,12 +306,18 @@ void TriangleBarycentric(Vec3f *vertices, float *zBuffer, TGAImage &img,
           z += (vertices[i].z * 0.5 + 0.5) * weight[i];
         }
 
+        // have to compute texture color here
+        // since we need to interpolate the color
+
         if (zBuffer[int(j + i * width)] < z) {
           TGAColor color = TGAColor(col.r * z, col.g * z, col.b * z, col.a);
           TGAColor colorDepth = TGAColor(255 * z, 255 * z, 255 * z, 255);
-          TGAColor colorTex = readColFromImg(texture, j, i);
+
+          // update z buffer
           updateZBuffer(zBuffer, j, i, z);
-          img.set(j, i, colorTex);
+
+          // set the image
+          img.set(j, i, colorDepth);
         }
       }
     }
@@ -324,12 +331,12 @@ void drawModel(Model *model, float *zBuffer, TGAImage &img, TGAImage &texture,
     // extra faces and vertices from models
     for (int i = 0; i < model->nfaces(); i++) {
       // get face
-      std::vector<int> singleFace = model->face(i);
+      face singleFace = model->face(i);
       // get vertices to draw the line
       for (int j = 0; j < 3; j++) {
         // loop to find the v0, v1 and v2
-        Vec3f v0 = model->vert(singleFace[j]);
-        Vec3f v1 = model->vert(singleFace[(j + 1) % 3]);
+        Vec3f v0 = model->vert(singleFace.vertsIdx[j]);
+        Vec3f v1 = model->vert(singleFace.vertsIdx[(j + 1) % 3]);
         // remap the data in v0 and v1 from -1~1 to 0~1
         int x0 = remap(v0.x, Vec2i(-1, 1), Vec2i(0, width));
         int x1 = remap(v1.x, Vec2i(-1, 1), Vec2i(0, width));
@@ -342,21 +349,28 @@ void drawModel(Model *model, float *zBuffer, TGAImage &img, TGAImage &texture,
   case drawMode::filledTri:
     for (int i = 0; i < model->nfaces(); i++) {
       // get face
-      std::vector<int> singleFace = model->face(i);
+      face singleFace = model->face(i);
       // get vertices to draw the line
       Vec3f screenCoords[3];
       Vec3f worldCoords[3];
+      Vec2f uvs[3];
       for (int j = 0; j < 3; j++) {
         // loop to find the v0, v1 and v2
-        Vec3f v = model->vert(singleFace[j]);
+        Vec3f vert = model->vert(singleFace.vertsIdx[j]);
+        Vec2f uv = model->uv(singleFace.uvsIdx[j]);
         // remap the data in v0 and v1 from -1~1 to 0~width or 0~height
-        int x = remap(v.x, Vec2i(-1, 1), Vec2i(0, width));
-        int y = remap(v.y, Vec2i(-1, 1), Vec2i(0, height));
+        int x = remap(vert.x, Vec2i(-1, 1), Vec2i(0, width));
+        int y = remap(vert.y, Vec2i(-1, 1), Vec2i(0, height));
+
+        // remap the uv
+        /* int u = remap(uv.x, Vec2i(-1, 1), Vec2i(0, width)); */
+        /* int v = remap(uv.y, Vec2i(-1, 1), Vec2i(0, width)); */
 
         // screenCoords[j] = Vec2f(x, y);
         // screenCoords is contain the z value of the vertex in world position
-        screenCoords[j] = Vec3f(x, y, v.z);
-        worldCoords[j] = v;
+        screenCoords[j] = Vec3f(x, y, vert.z);
+        worldCoords[j] = vert;
+        uvs[j] = Vec2f(uv.x, uv.y);
       }
 
       // calculate the normal
@@ -375,7 +389,7 @@ void drawModel(Model *model, float *zBuffer, TGAImage &img, TGAImage &texture,
       if (lightIntensity > 0) {
         // wrong: worldCoords is range from -1 to 1
         // TriangleBarycentric(worldCoords, zBuffer, img, col);
-        TriangleBarycentric(screenCoords, zBuffer, img, texture, col);
+        TriangleBarycentric(screenCoords, zBuffer, uvs, img, texture, col);
       }
     }
     break;
